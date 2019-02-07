@@ -2,6 +2,5 @@ node_modules/
 .watchmanconfig
 gitignore
 package-lock.json
-package.json
 babel.config.js
 .expo/
