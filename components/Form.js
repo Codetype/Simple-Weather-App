@@ -3,15 +3,19 @@ import {View, Text, Button, TextInput, StyleSheet, TouchableOpacity} from 'react
 
 const styles = StyleSheet.create({
     textInput: {
-      padding: 10,
+      paddingTop: 10,
+      paddingBottom: 2,
+      marginBottom: 8,
       width: '100%',
-      
+      color: '#fff',
+      borderBottomColor: '#FFF',
+      borderBottomWidth: 1
     },
     searchButton: {
         padding: 10,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: "#841584",
+        backgroundColor: "#193776",
     },
     buttonLabel: {
         color: '#ffffff',
@@ -21,13 +25,12 @@ const styles = StyleSheet.create({
 export default class Form extends Component {
     constructor(){
         super();
-
     }
 
     render () {
         return (
             <View>
-                <Text>Wpisz nazwę szukanego miasta:</Text>
+                <Text style={{color: '#fff'}}>Wpisz nazwę szukanego miasta:</Text>
                 <TextInput
                     style={styles.textInput}
                     value={this.props.value}

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, Alert, StyleSheet} from 'react-native';
+import {View, Text, Alert, StyleSheet, Image} from 'react-native';
 
 import Form from './Form';
 import Result from './Result';
@@ -23,6 +23,7 @@ export default class Application extends Component {
         temp: "",
         pressure: "",
         wind: "",
+        weatherState: "",
         error: false,
     }
 
@@ -43,7 +44,6 @@ export default class Application extends Component {
     
         fetch(API)
             .then(response => {
-                console.log(API)
                 if(response.ok){
                     return response;
                 }
@@ -57,9 +57,10 @@ export default class Application extends Component {
                     city: this.state.value,
                     sunrise: new Date(data.sys.sunrise*1000).toLocaleString(),
                     sunset: new Date(data.sys.sunset*1000).toLocaleString(),
-                    temp: data.main.temp,
+                    temp: Math.round(data.main.temp),
                     pressure: data.main.pressure,
                     wind: data.wind.speed,
+                    weatherState: data.weather[0].main,
                     error: false,
                 }))
             })
@@ -75,14 +76,14 @@ export default class Application extends Component {
     
     render() {
         return (
-          <View style={styles.app}>
-            <Form 
-                value={this.state.value} 
-                change={this.handleInputChange}
-                submit={this.state.value ? this.handleCitySubmit : this.handleEmptyInput}
-            />
-            <Result weather={this.state}/>
-          </View>
+            <View style={styles.app}>
+                <Form 
+                    value={this.state.value} 
+                    change={this.handleInputChange}
+                    submit={this.state.value ? this.handleCitySubmit : this.handleEmptyInput}
+                />
+                <Result weather={this.state}/>
+            </View>
         );
       }
 }
