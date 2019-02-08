@@ -1,12 +1,10 @@
-import React, {Component} from 'react';
-import { StyleSheet, Button, ImageBackground } from 'react-native';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 
 import Forecast from './components/Forecast';
-import Main from './components/Main';
+import Application from './components/Application';
 
 const AppNavigator = createStackNavigator({
-  MainScreen: { screen: Main },
+  AppScreen: { screen: Application },
   ForecastScreen: { screen: Forecast }
 });
 

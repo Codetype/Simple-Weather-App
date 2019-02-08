@@ -1,16 +1,23 @@
 import React, {Component} from 'react';
-import {View, Text, Alert, StyleSheet, Image} from 'react-native';
+import {View, ImageBackground, Alert, StyleSheet, Button} from 'react-native';
 
 import Form from './Form';
 import Result from './Result';
 
-const APIKey = '0acfd1be658e5166ac341f8bd1cc2a0d';
+const APIKey = '76c7a8c071248e3da783276f1bfcd97e';
 
 const styles = StyleSheet.create({
     app: {
       marginTop: 10,
       padding: 10,
     },
+    container: {
+        justifyContent: 'center',
+        flex: 1,
+      },
+      imageBackground: {
+        flex: 1,
+      },
 });
 
 function getNormalizeTime(rawDatetime) {
@@ -51,7 +58,7 @@ export default class Application extends Component {
     handleCitySubmit = (e) => {
         e.preventDefault();
         const API = `https://api.openweathermap.org/data/2.5/weather?q=${this.state.value}&appid=${APIKey}&units=metric`;
-    
+        console.log(API);
         fetch(API)
             .then(response => {
                 if(response.ok){
@@ -87,14 +94,19 @@ export default class Application extends Component {
     
     render() {
         return (
-            <View style={styles.app}>
-                <Form 
-                    value={this.state.value} 
-                    change={this.handleInputChange}
-                    submit={this.state.value ? this.handleCitySubmit : this.handleEmptyInput}
-                />
-                <Result weather={this.state}/>
-            </View>
+            <ImageBackground source={require('../assets/backgroundImage/sky.png')} style={styles.imageBackground}>
+                <View style={styles.app}>
+                    <Form 
+                        value={this.state.value} 
+                        change={this.handleInputChange}
+                        submit={this.state.value ? this.handleCitySubmit : this.handleEmptyInput}
+                    />
+                    <Result weather={this.state}/>
+                    { !this.state.error && this.state.city ? 
+                    <Button onPress={() => {this.props.navigation.navigate('ForecastScreen', 
+                    {name: this.state.value})} } title="Prognoza 5 dniowa"/> : null }
+                </View>
+            </ImageBackground>
         );
       }
 }

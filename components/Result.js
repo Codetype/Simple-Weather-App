@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Image, Button} from 'react-native'
+import {View, Text, StyleSheet, Image} from 'react-native'
 
 const styles = StyleSheet.create({
     results: {
@@ -64,13 +64,11 @@ const images = {
     iconClouds: require('../assets/backgroundImage/icon-cloud.png'),
     iconSnow: require('../assets/backgroundImage/icon-snow.png'),
     iconRain: require('../assets/backgroundImage/icon-rain.png'),
-    
 }
 
 export default class Result extends Component {
     constructor(){
         super();
-
     }
     
     render () {
@@ -100,6 +98,7 @@ export default class Result extends Component {
                 mainWeather = 'Mżawka';
                 weatherImage = images.iconRain;
                 break;
+            //add mist
             default:
                 mainWeather = 'Zmienna';
                 break;
@@ -146,7 +145,7 @@ export default class Result extends Component {
                             <Text style={styles.detailsValue}>{avgTemp} °C</Text>
                         </View>
                     </View>
-                    <Button onPress={() => this.props.navigation.navigate('ForecastScreen')} title="Forecast"/>
+                   
                 </View>
             )
         }

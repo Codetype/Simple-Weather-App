@@ -1,4 +1,5 @@
 node_modules/
+testdata/
 .watchmanconfig
 gitignore
 package-lock.json
