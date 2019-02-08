@@ -13,10 +13,16 @@ const styles = StyleSheet.create({
     },
 });
 
+function getNormalizeTime(rawDatetime) {
+    var hours = new Date(rawDatetime*1000).getHours();
+    var minutes = new Date(rawDatetime*1000).getMinutes();
+    minutes < 10 ? minutes = '0'+minutes : minutes; 
+    return hours + ':' + minutes;
+}
+
 export default class Application extends Component {
     state = {
         value: "",
-        date: "",
         city: "",
         sunrise: "",
         sunset: "",
@@ -24,6 +30,10 @@ export default class Application extends Component {
         pressure: "",
         wind: "",
         weatherState: "",
+        humidity: "",
+        visibility: "",
+        avgTemp: "",
+        cloudiness: "",
         error: false,
     }
 
@@ -51,16 +61,18 @@ export default class Application extends Component {
             })
             .then(response => response.json())
             .then(data => {
-                const time = new Date().toLocaleString();
                 this.setState(prevState => ({
-                    date: time,
                     city: this.state.value,
-                    sunrise: new Date(data.sys.sunrise*1000).toLocaleString(),
-                    sunset: new Date(data.sys.sunset*1000).toLocaleString(),
+                    sunrise: getNormalizeTime(data.sys.sunrise),
+                    sunset: getNormalizeTime(data.sys.sunset),
                     temp: Math.round(data.main.temp),
                     pressure: data.main.pressure,
                     wind: data.wind.speed,
                     weatherState: data.weather[0].main,
+                    humidity: data.main.humidity,
+                    visibility: data.visibility/1000,
+                    avgTemp: Math.round((data.main.temp_max + data.main.temp_min)/2),
+                    cloudiness: data.clouds.all,
                     error: false,
                 }))
             })
@@ -72,7 +84,6 @@ export default class Application extends Component {
                 }))
             });
     }
-
     
     render() {
         return (

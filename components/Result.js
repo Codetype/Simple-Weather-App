@@ -6,6 +6,7 @@ const styles = StyleSheet.create({
         color: "#FFF",
         justifyContent: 'center',
         alignItems: 'center',
+        marginBottom: 10,
     },
     cityName: {
       paddingTop: 10,
@@ -32,6 +33,30 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
     },
+    container: {
+        flex: 1,
+    },
+    details: {
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        width: '100%',
+    },
+    cell: {
+        display: 'flex',
+        flexDirection: 'column',
+        flexBasis: '50%',
+        flex: 1,
+    },
+    detailsKey: {
+        marginTop: 10,
+        color: '#fff',
+        fontSize: 12,
+    },
+    detailsValue: {
+        color: '#fff',
+        fontSize: 18,
+    },
 });
 
 const images = {
@@ -49,7 +74,7 @@ export default class Result extends Component {
     }
     
     render () {
-        const {error, city, date, sunset, sunrise, pressure, wind, temp, weatherState} = this.props.weather;
+        const {error, city, humidity, avgTemp, cloudiness, visibility, sunset, sunrise, pressure, wind, temp, weatherState} = this.props.weather;
         let content = null;
         let weatherImage = null;
         let mainWeather = '';
@@ -80,6 +105,8 @@ export default class Result extends Component {
                 break;
         }
 
+
+
         if(!error && city){
             content = (
                 <View>
@@ -89,12 +116,35 @@ export default class Result extends Component {
                         <Text style={styles.mainWeather}>{mainWeather}</Text>
                         <Text style={styles.temperature}>{temp} °C</Text>
                     </View>
-                    <View>
-                        <Text>W dniu: {date}</Text>
-                        <Text>Wschód słońca: {sunrise}</Text>
-                        <Text>Zachód słońca: {sunset}</Text>
-                        <Text>Ciśnienie: {pressure} hPa</Text>
-                        <Text>Prędkość wiatru: {wind} m/s</Text>
+
+                    
+                    <View style={styles.details}>
+                        <View style={styles.cell}>
+                            <Text style={styles.detailsKey}>Wschód słońca</Text>
+                            <Text style={styles.detailsValue}>{sunrise}</Text>
+
+                            <Text style={styles.detailsKey}>Ciśnienie</Text>
+                            <Text style={styles.detailsValue}>{pressure} hPa</Text>
+
+                            <Text style={styles.detailsKey}>Wilgotność</Text>
+                            <Text style={styles.detailsValue}>{humidity}%</Text>
+
+                            <Text style={styles.detailsKey}>Widoczność</Text>
+                            <Text style={styles.detailsValue}>{visibility} km</Text>
+                        </View>
+                        <View style={styles.cell}>
+                            <Text style={styles.detailsKey}>Zachód słońca</Text>
+                            <Text style={styles.detailsValue}>{sunset}</Text>
+
+                            <Text style={styles.detailsKey}>Prędkośc wiatru</Text>
+                            <Text style={styles.detailsValue}>{wind} m/s</Text>
+
+                            <Text style={styles.detailsKey}>Zachmurzenie</Text>
+                            <Text style={styles.detailsValue}>{cloudiness}%</Text>
+
+                            <Text style={styles.detailsKey}>Średnia temperatura</Text>
+                            <Text style={styles.detailsValue}>{avgTemp} °C</Text>
+                        </View>
                     </View>
                 </View>
             )
