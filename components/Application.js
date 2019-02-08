@@ -8,7 +8,7 @@ const APIKey = '0acfd1be658e5166ac341f8bd1cc2a0d';
 
 const styles = StyleSheet.create({
     app: {
-      marginTop: 40,
+      marginTop: 10,
       padding: 10,
     },
 });

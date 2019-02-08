@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native'
+import {View, Text, StyleSheet, Image, Button} from 'react-native'
 
 const styles = StyleSheet.create({
     results: {
@@ -146,6 +146,7 @@ export default class Result extends Component {
                             <Text style={styles.detailsValue}>{avgTemp} °C</Text>
                         </View>
                     </View>
+                    <Button onPress={() => this.props.navigation.navigate('ForecastScreen')} title="Forecast"/>
                 </View>
             )
         }

@@ -1,26 +1,15 @@
-import React from 'react';
-import { StyleSheet, Text, View, ImageBackground } from 'react-native';
+import React, {Component} from 'react';
+import { StyleSheet, Button, ImageBackground } from 'react-native';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 
-import Application from './components/Application'
+import Forecast from './components/Forecast';
+import Main from './components/Main';
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <ImageBackground source={require('./assets/backgroundImage/sky.png')} style={styles.imageBackground}>
-        <Application />
-
-      </ImageBackground>
-    );
-  }
-}
-
-const resizeMode = 'center';
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    flex: 1,
-  },
-  imageBackground: {
-    flex: 1,
-  },
+const AppNavigator = createStackNavigator({
+  MainScreen: { screen: Main },
+  ForecastScreen: { screen: Forecast }
 });
+
+
+export default createAppContainer(AppNavigator);
+ 
