@@ -1,7 +1,117 @@
 import React, {Component} from 'react';
 import { StyleSheet, ImageBackground, View, Text, FlatList, Image} from 'react-native';
 
-const styles = StyleSheet.create({
+const APIKey = '76c7a8c071248e3da783276f1bfcd97e';
+
+const images = {
+    iconClouds: require('../assets/backgroundImage/icon-cloud.png'),
+};
+
+function getNormalizeWeekDay(weekDay){
+    switch(weekDay){
+        case 0: return {key: 'Niedziela'};
+        case 1: return {key: 'Poniedziałek'};
+        case 2: return {key: 'Wtorek'};
+        case 3: return {key: 'Środa'}; 
+        case 4: return {key: 'Czwartek'}; 
+        case 5: return {key: 'Piątek'}; 
+        case 6: return {key: 'Sobota'};
+    }
+}
+
+export default class Forecast extends Component {
+    constructor(){
+        super();
+    }
+
+    state = {
+        city: '',
+        weekDays: [],
+        dayTemperatures: [],
+        nightTemperatures: [],
+    }
+    
+    componentWillMount(){
+        const cityName = this.props.navigation.getParam('name');
+        
+        const API = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${APIKey}&units=metric`;
+        console.log(API);
+        fetch(API)
+            .then(response => {
+                if(response.ok){
+                    return response;
+                }
+                throw Error("Fetch error")
+            })
+            .then(response => response.json())
+            .then(data => {
+                let dayTempArr = [];
+                let nightTempArr = [];
+                let weekDaysArr = [];
+
+                data.list.forEach(element => {
+                    let hour = new Date(element.dt*1000).getHours();
+                    if(hour == 13){
+                        dayTempArr.push({key: Math.round(element.main.temp)});
+                    } else if (hour == 1){
+                        let weekDay = new Date(element.dt*1000).getDay();
+                        weekDaysArr.push(getNormalizeWeekDay(weekDay));
+                        nightTempArr.push({key: Math.round(element.main.temp)});
+                    }
+                });
+                
+                this.setState(prevState => ({
+                    city: cityName,
+                    dayTemperatures: dayTempArr,
+                    nightTemperatures: nightTempArr,
+                    weekDays: weekDaysArr,
+                    error: false,
+                }))
+            })
+            .catch(err => {
+                console.log(err);
+                this.setState(prevState => ({
+                    error: true,
+                    city: prevState.city,
+                }))
+            });
+    }
+
+    render () {
+      const weatherImage = images.iconClouds;
+      return (
+        <ImageBackground source={require('../assets/backgroundImage/sky.png')} style={styles.imageBackground}>
+            <Text style={styles.cityName}>{this.state.city}</Text>
+            <View style={styles.details}>
+                <View style={styles.cell}>
+                    <FlatList
+                        data={this.state.weekDays}
+                        renderItem={({item}) => <Text style={styles.h1} >{item.key}</Text>}
+                    />
+                </View>
+                <View style={styles.cell}>
+
+                </View>
+                <View style={styles.smallCell}>
+                    <FlatList
+                        data={this.state.dayTemperatures}
+                        renderItem={({item}) => <Text style={styles.h1} >{item.key}</Text>}
+                    />
+                </View>
+                <View style={styles.smallCell}>                
+                    <FlatList
+                        data={this.state.nightTemperatures}
+                        renderItem={({item}) => <Text style={styles.h1} >{item.key}</Text>}
+                    />
+                </View>
+            </View>
+
+        </ImageBackground> 
+      );
+    }
+  }
+
+  const styles = StyleSheet.create({
     container: {
       justifyContent: 'center',
       flex: 1,
@@ -47,110 +157,3 @@ const styles = StyleSheet.create({
         height: 20,
     }
 });
-const APIKey = '76c7a8c071248e3da783276f1bfcd97e';
-
-const images = {
-    iconClouds: require('../assets/backgroundImage/icon-cloud.png'),
-};
-
-export default class Forecast extends Component {
-    constructor(){
-        super();
-    }
-
-    state = {
-        city: '',
-        weekDays: [],
-        dayTemperatures: [],
-        nightTemperatures: [],
-    }
-    
-    componentWillMount(){
-        const cityName = this.props.navigation.getParam('name');
-        
-        const API = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${APIKey}&units=metric`;
-        console.log(API);
-        fetch(API)
-            .then(response => {
-                if(response.ok){
-                    return response;
-                }
-                throw Error("Fetch error")
-            })
-            .then(response => response.json())
-            .then(data => {
-                let dayTempArr = [];
-                let nightTempArr = [];
-                let weekDaysArr = []; 
-                data.list.forEach(element => {
-                    let hour = new Date(element.dt*1000).getHours();
-                    if(hour == 13){
-                        dayTempArr.push({key: Math.round(element.main.temp)});
-                    } else if (hour == 1){
-                        let weekDay = new Date(element.dt*1000).getDay();
-                        switch(weekDay){
-                            case 0: weekDaysArr.push({key: 'Niedziela'}); break;
-                            case 1: weekDaysArr.push({key: 'Poniedziałek'}); break;
-                            case 2: weekDaysArr.push({key: 'Wtorek'}); break;
-                            case 3: weekDaysArr.push({key: 'Środa'}); break;
-                            case 4: weekDaysArr.push({key: 'Czwartek'}); break;
-                            case 5: weekDaysArr.push({key: 'Piątek'}); break;
-                            case 6: weekDaysArr.push({key: 'Sobota'}); break;
-                        }
-                        nightTempArr.push({key: Math.round(element.main.temp)});
-                    }
-                });
-                this.setState(prevState => ({
-                    city: cityName,
-                    dayTemperatures: dayTempArr,
-                    nightTemperatures: nightTempArr,
-                    weekDays: weekDaysArr,
-                    error: false,
-                }))
-            })
-            .catch(err => {
-                console.log(err);
-                this.setState(prevState => ({
-                    error: true,
-                    city: prevState.city,
-                }))
-            });
-    }
-
-    render () {
-      const weatherImage = images.iconClouds;
-      return (
-        <ImageBackground source={require('../assets/backgroundImage/sky.png')} style={styles.imageBackground}>
-            <Text style={styles.cityName}>{this.state.city}</Text>
-            <View style={styles.details}>
-                <View style={styles.cell}>
-                    <FlatList
-                        data={this.state.weekDays}
-                        renderItem={({item}) => <Text style={styles.h1} >{item.key}</Text>}
-                    />
-                </View>
-                <View style={styles.cell}>
-                    <Image resizeMode='center' style={styles.weatherImage} source={weatherImage}/>
-                    <Image resizeMode='center' style={styles.weatherImage} source={weatherImage}/>
-                    <Image resizeMode='center' style={styles.weatherImage} source={weatherImage}/>
-                    <Image resizeMode='center' style={styles.weatherImage} source={weatherImage}/>
-                    <Image resizeMode='center' style={styles.weatherImage} source={weatherImage}/>
-                </View>
-                <View style={styles.smallCell}>
-                    <FlatList
-                        data={this.state.dayTemperatures}
-                        renderItem={({item}) => <Text style={styles.h1} >{item.key}</Text>}
-                    />
-                </View>
-                <View style={styles.smallCell}>                
-                    <FlatList
-                        data={this.state.nightTemperatures}
-                        renderItem={({item}) => <Text style={styles.h1} >{item.key}</Text>}
-                    />
-                </View>
-            </View>
-
-        </ImageBackground> 
-      );
-    }
-  }

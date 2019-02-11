@@ -1,11 +1,13 @@
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 
 import Forecast from './components/Forecast';
+import Weather from './components/Weather';
 import Application from './components/Application';
 
 const AppNavigator = createStackNavigator({
   AppScreen: { screen: Application },
-  ForecastScreen: { screen: Forecast }
+  WeatherScreen: { screen: Weather },
+  ForecastScreen: { screen: Forecast },
 });
 
 
