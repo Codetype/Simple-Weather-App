@@ -1,27 +1,6 @@
 import React, {Component} from 'react';
 import {View, Text, TextInput, StyleSheet, TouchableOpacity} from 'react-native'
 
-const styles = StyleSheet.create({
-    textInput: {
-      paddingTop: 10,
-      paddingBottom: 2,
-      marginBottom: 8,
-      width: '100%',
-      color: '#fff',
-      borderBottomColor: '#FFF',
-      borderBottomWidth: 1
-    },
-    searchButton: {
-        padding: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: "#193776",
-    },
-    buttonLabel: {
-        color: '#ffffff',
-    }
-});
-
 export default class Form extends Component {
     constructor(){
         super();
@@ -47,3 +26,23 @@ export default class Form extends Component {
     }
 };
 
+const styles = StyleSheet.create({
+    textInput: {
+      paddingTop: 10,
+      paddingBottom: 2,
+      marginBottom: 8,
+      width: '100%',
+      color: '#fff',
+      borderBottomColor: '#FFF',
+      borderBottomWidth: 1
+    },
+    searchButton: {
+        padding: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: "#193776",
+    },
+    buttonLabel: {
+        color: '#ffffff',
+    }
+});

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Image, ImageBackground} from 'react-native'
+import {View, Text, StyleSheet, Image, ImageBackground, TouchableOpacity} from 'react-native'
 
 const images = {
     iconSun: require('../assets/backgroundImage/icon-sun.png'),
@@ -40,12 +40,12 @@ export default class Weather extends Component {
     }
     
     componentWillMount(){
-
-
         const cityName = this.props.navigation.getParam('name');
-        console.log(cityName);
+        this.setState(prevState => ({
+            city:cityName
+        }));
         const API = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${APIKey}&units=metric`;
-        console.log(API);
+        
         fetch(API)
             .then(response => {
                 if(response.ok){
@@ -71,10 +71,9 @@ export default class Weather extends Component {
                 }))
             })
             .catch(err => {
-                //console.l og(err);
+                console.log(err);
                 this.setState(prevState => ({
                     error: true,
-                    city: prevState.value,
                 }))
             });
     }
@@ -84,46 +83,44 @@ export default class Weather extends Component {
         let weatherImage = null;
         let mainWeather = '';
 
-        switch(this.state.weatherState){
-            case 'Clear':
-                mainWeather = 'Słonecznie';
-                weatherImage = images.iconSun;
-                break;
-            case 'Clouds': 
-                mainWeather = 'Pochmurnie';
-                weatherImage = images.iconClouds;
-                break;
-            case 'Rain': 
-                mainWeather = 'Opady deszczu';
-                weatherImage = images.iconRain;
-                break;
-            case 'Snow': 
-                mainWeather = 'Opady śniegu';
-                weatherImage = images.iconSnow;
-                break;
-            case 'Drizzle':
-                mainWeather = 'Mżawka';
-                weatherImage = images.iconRain;
-                break;
-            case 'Mist':
-                mainWeather = 'Zamglenie';
-                weatherImage = images.iconFog;
-                break;
-            default:
-                mainWeather = 'Zmienna';
-                weatherImage = images.iconChangeable;
-                break;
-        }
-
-
-        console.log(this.state.error + ' ' + this.state.city);
         if(!this.state.error && this.state.city){
+            switch(this.state.weatherState){
+                case 'Clear':
+                    mainWeather = 'Słonecznie';
+                    weatherImage = images.iconSun;
+                    break;
+                case 'Clouds': 
+                    mainWeather = 'Pochmurnie';
+                    weatherImage = images.iconClouds;
+                    break;
+                case 'Rain': 
+                    mainWeather = 'Opady deszczu';
+                    weatherImage = images.iconRain;
+                    break;
+                case 'Snow': 
+                    mainWeather = 'Opady śniegu';
+                    weatherImage = images.iconSnow;
+                    break;
+                case 'Drizzle':
+                    mainWeather = 'Mżawka';
+                    weatherImage = images.iconRain;
+                    break;
+                case 'Mist':
+                    mainWeather = 'Zamglenie';
+                    weatherImage = images.iconFog;
+                    break;
+                default:
+                    mainWeather = 'Zmienna';
+                    weatherImage = images.iconChangeable;
+                    break;
+            };
+
             content = (
                 <View styles={styles.app}>
                     <View style={styles.results}>
                         <Text style={styles.cityName}>{this.state.city}</Text>
                         <Image resizeMode='contain' style={styles.weatherImage} source={weatherImage}/>
-                        <Text style={styles.mainWeather}>{this.state.mainWeather}</Text>
+                        <Text style={styles.mainWeather}>{mainWeather}</Text>
                         <Text style={styles.temperature}>{this.state.temp} °C</Text>
                     </View>
 
@@ -156,7 +153,16 @@ export default class Weather extends Component {
                             <Text style={styles.detailsValue}>{this.state.avgTemp} °C</Text>
                         </View>
                     </View>
-                   
+                    <TouchableOpacity
+                        onPress={() => this.props.navigation.navigate('ForecastScreen', {
+                            name: this.state.city,
+                            main: this.state.weatherState,
+                            temp: this.state.temp,
+                         })}
+                        style={styles.searchButton}
+                    >
+                    <Text style={styles.buttonLabel}>Prognoza 5 dniowa</Text>
+                    </TouchableOpacity>
                 </View>
             )
         }
@@ -169,11 +175,10 @@ export default class Weather extends Component {
     }
 };
 
-//{this.state.error ? content : <Text style={styles.errorMessage}>Nie znaleziono: {this.state.city}</Text>}
-
 const styles = StyleSheet.create({
     imageBackground: {
         flex: 1,
+        padding: 10,
     },
     app: {
         marginTop: 10,
@@ -211,7 +216,6 @@ const styles = StyleSheet.create({
         height: 100,
     },
     details: {
-        padding: 10,
         display: 'flex',
         flexDirection: 'row',
         flexWrap: 'wrap',
@@ -232,4 +236,14 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 18,
     },
+    searchButton: {
+        marginTop: 20,
+        padding: 10,
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        backgroundColor: "#193776",
+    },
+    buttonLabel: {
+        color: '#ffffff',
+    }
 });
